@@ -4,6 +4,5 @@ public class BackOperation extends Operation {
 
     public BackOperation(int offSet) {
         super(offSet);
-
     }
 }

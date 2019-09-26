@@ -1,10 +1,7 @@
 package com.example.mars_rover;
 
 
-import com.example.mars_rover.operation.BackOperation;
-import com.example.mars_rover.operation.Forward;
-import com.example.mars_rover.operation.LeftOperation;
-import com.example.mars_rover.operation.Operation;
+import com.example.mars_rover.operation.*;
 
 import java.util.List;
 
@@ -42,33 +39,43 @@ public class MarsCar {
 
 
     public void turnLeft() {
-        directionTurn(NORTH, EAST, SOUTH, WEST);
+        switch (this.direction) {
+            case EAST:
+                this.direction = NORTH;
+                break;
+            case SOUTH:
+                this.direction = EAST;
+                break;
+            case WEST:
+                this.direction = SOUTH;
+                break;
+            case NORTH:
+                this.direction = WEST;
+                break;
+            default:
+        }
 
     }
 
-    private void directionTurn(Direction north, Direction east, Direction south, Direction west) {
+
+    public void turnRight() {
+
         switch (this.direction) {
             case EAST:
-                this.direction = north;
+                this.direction = SOUTH;
                 break;
             case SOUTH:
-                this.direction = east;
+                this.direction = WEST;
                 break;
             case WEST:
-                this.direction = south;
+                this.direction = NORTH;
                 break;
             case NORTH:
-                this.direction = west;
+                this.direction = EAST;
                 break;
             default:
 
         }
-    }
-
-    public void turnRight() {
-
-        directionTurn(SOUTH, WEST, NORTH, EAST);
-
     }
 
     public void receivedCommandAndInit(Command command) {
@@ -76,7 +83,6 @@ public class MarsCar {
         this.area = command.getArea();
         this.point = command.getPoint();
         this.direction = command.getDirection();
-
     }
 
     public Area getArea() {
@@ -109,17 +115,18 @@ public class MarsCar {
 
     }
 
-    private void executeOperation(Operation operation1) {
-        int offSet = operation1.getOffSet();
-        if (operation1 instanceof Forward) {
+    private void executeOperation(Operation commandOperation) {
+        int offSet = commandOperation.getOffSet();
+        if (commandOperation instanceof Forward) {
             this.moveForward(offSet);
         } else {
-            if (operation1 instanceof BackOperation) {
+            if (commandOperation instanceof BackOperation) {
                 this.moveBack(offSet);
             }
-            if (operation1 instanceof LeftOperation) {
+            if (commandOperation instanceof LeftOperation) {
                 this.turnLeft();
-            } else {
+            }
+            if(commandOperation instanceof RightOperation) {
                 this.turnRight();
             }
         }
